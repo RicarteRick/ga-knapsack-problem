@@ -171,7 +171,7 @@ def main():
   generation_qtd = 10000
   mutation_rate = 0.5
   security_rate = 1    # 0 - 100%
-  header_line = f"Instancia\tValor\t\tPeso\t\tCapacidade restante\tExecucao(s)\n"
+  header_line = f"Instancia;Valor;Peso;Capacidade restante;Execucao(s)\n"
   with open("output/ga.out", "a+") as output_file:
     output_file.write(header_line)
 
@@ -198,8 +198,8 @@ def main():
       
       execution_time = time.time() - start_time
 
-      # coloca no arquivo qual a iteração e o valor máximo atingido
-      output_line = f"{iterator}\t\t\t{best_value}\t\t{best_weight}\t\t{capacity_diff}\t\t\t\t\t{execution_time}\n"
+      # coloca no arquivo qual a iteração e os valores da solucao
+      output_line = f"{iterator};{best_value};{best_weight};{capacity_diff};{execution_time}\n"
 
       with open("output/ga.out", "a+") as output_file:
         output_file.write(output_line)
