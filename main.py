@@ -171,38 +171,47 @@ def main():
   generation_qtd = 10000
   mutation_rate = 0.5
   security_rate = 1    # 0 - 100%
-  header_line = f"Instancia;Valor;Peso;Capacidade restante;Execucao(s)\n"
-  with open("output/ga.out", "a+") as output_file:
-    output_file.write(header_line)
+  for file_number in range(1,5):
+    header_line = f"Iteracao;Valor;Peso;Capacidade restante;Execucao(s)\n"
+    with open(f"output/ga_{file_number}.out", "w") as output_file:
+      output_file.write(header_line)
 
-  for iterator in range(1, 5):
-    start_time = time.time()
+    start_time_file = time.time()
+    
+    for iterator in range(1, 6):
+      start_time_iterator = time.time()
 
-    input_file_path = f"input/input{iterator}.in"
+      input_file_path = f"input/input{iterator}.in"
 
-    vet_value, vet_weight, capacity = get_input_values(input_file_path)
+      vet_value, vet_weight, capacity = get_input_values(input_file_path)
 
-    best_solution, best_value, best_weight, best_ids = knapsack_alg(vet_value, vet_weight, capacity, population_size, generation_qtd, mutation_rate, security_rate)
+      best_solution, best_value, best_weight, best_ids = knapsack_alg(vet_value, vet_weight, capacity, population_size, generation_qtd, mutation_rate, security_rate)
 
-    print("---------------------------------------")
-    print("Iteracao #" + str(iterator) + ":")
-    if best_solution == []:
-      print('Nao foi encontrada uma solucao')
-    else:
-      capacity_diff = capacity - best_weight
-      print("Melhor Solução:", best_solution)
-      print("Valor da Solução:", best_value)
-      print("Itens adicionados:", best_ids)
-      print("Peso da Solução:", best_weight)
-      print("Capacidade restante na mochila:", capacity_diff)
-      
-      execution_time = time.time() - start_time
+      execution_time_iterator = time.time() - start_time_iterator
 
-      # coloca no arquivo qual a iteração e os valores da solucao
-      output_line = f"{iterator};{best_value};{best_weight};{capacity_diff};{execution_time}\n"
+      print("---------------------------------------")
+      print("Iteracao #" + str(iterator) + ":")
+      if best_solution == []:
+        print('Nao foi encontrada uma solucao')
 
-      with open("output/ga.out", "a+") as output_file:
+        output_line = f"{iterator};;;;{execution_time_iterator}\n"
+      else:
+        capacity_diff = capacity - best_weight
+        print("Melhor Solução:", best_solution)
+        print("Valor da Solução:", best_value)
+        print("Itens adicionados:", best_ids)
+        print("Peso da Solução:", best_weight)
+        print("Capacidade restante na mochila:", capacity_diff)
+
+        # coloca no arquivo qual a iteração e os valores da solucao
+        output_line = f"{iterator};{best_value};{best_weight};{capacity_diff};{execution_time_iterator}\n"
+
+      with open(f"output/ga_{file_number}.out", "a+") as output_file:
         output_file.write(output_line)
+
+    execution_time_file = time.time() - start_time_file
+    with open(f"output/ga_{file_number}.out", "a+") as output_file:
+      output_file.write(str(execution_time_file))
 
 if __name__ == "__main__":
   main()
