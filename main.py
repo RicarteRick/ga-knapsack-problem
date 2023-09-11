@@ -171,9 +171,9 @@ def main():
   generation_qtd = 10000
   mutation_rate = 0.5
   security_rate = 1    # 0 - 100%
-  for file_number in range(1,5):
+  for file_number in range(1,10):
     header_line = f"Iteracao;Valor;Peso;Capacidade restante;Execucao(s)\n"
-    with open(f"output/ga_{file_number}.out", "w") as output_file:
+    with open(f"output/ga/ga_{file_number}.out", "w") as output_file:
       output_file.write(header_line)
 
     start_time_file = time.time()
@@ -181,7 +181,7 @@ def main():
     for iterator in range(1, 6):
       start_time_iterator = time.time()
 
-      input_file_path = f"input/input{iterator}.in"
+      input_file_path = f"input/input{file_number}.in"
 
       vet_value, vet_weight, capacity = get_input_values(input_file_path)
 
@@ -206,11 +206,11 @@ def main():
         # coloca no arquivo qual a iteração e os valores da solucao
         output_line = f"{iterator};{best_value};{best_weight};{capacity_diff};{execution_time_iterator}\n"
 
-      with open(f"output/ga_{file_number}.out", "a+") as output_file:
+      with open(f"output/ga/ga_{file_number}.out", "a+") as output_file:
         output_file.write(output_line)
 
     execution_time_file = time.time() - start_time_file
-    with open(f"output/ga_{file_number}.out", "a+") as output_file:
+    with open(f"output/ga/ga_{file_number}.out", "a+") as output_file:
       output_file.write(str(execution_time_file))
 
 if __name__ == "__main__":
