@@ -69,7 +69,7 @@ def mutation(child, itens_qtd):
 
   return child
 
-def compareParentsChildren(vet_children, vet_fitness_children, vet_parents, vet_fitness_parents):
+def compare_parents_children(vet_children, vet_fitness_children, vet_parents, vet_fitness_parents):
   vet_winners = []
   vet_winners_fitness = []
   vet_all_candidates = vet_children + vet_parents
@@ -131,7 +131,7 @@ def knapsack_alg(vet_value, vet_weight, capacity, population_size, generation_qt
     vet_fitness_parents.append(vet_fitness[population_parents_indexes[0]])
     vet_fitness_parents.append(vet_fitness[population_parents_indexes[1]])
 
-    vet_winners, vet_winners_fitness = compareParentsChildren(vet_children, vet_fitness_children, vet_parents, vet_fitness_parents)
+    vet_winners, vet_winners_fitness = compare_parents_children(vet_children, vet_fitness_children, vet_parents, vet_fitness_parents)
 
     population[population_parents_indexes[0]] = vet_winners[0]
     population[population_parents_indexes[1]] = vet_winners[1]
