@@ -88,6 +88,7 @@ def generate_value_x_execution_time_graph(vet_file_names, vet_value_ga, vet_valu
     ax1.legend(lines + lines2, labels + labels2, loc='upper left')
 
     plt.tight_layout()
+    plt.savefig('graph_value_x_time.png', bbox_inches='tight', pad_inches=0.1, transparent=True)
     plt.show()
 
 def generate_datatable(vet_file_names, vet_value_ga, vet_weight_ga, vet_execution_time_ga,
@@ -114,12 +115,39 @@ def generate_datatable(vet_file_names, vet_value_ga, vet_weight_ga, vet_executio
     grasp_color = 'orange'
 
     for col_name, cell in table_data.get_celld().items():
-        _, col_number = col_name
+        row_number, col_number = col_name
+
+        if col_number == 0 or col_number == 1: #se for valor
+            ga_value = vet_value_ga[row_number-1]
+            grasp_value = vet_value_grasp[row_number-1]
+        if col_number == 2 or col_number == 3: #se for peso
+            ga_value = vet_weight_ga[row_number-1]
+            grasp_value = vet_weight_grasp[row_number-1]
+        if col_number == 4 or col_number == 5: #se for tempo
+            ga_value = vet_execution_time_ga[row_number-1]
+            grasp_value = vet_execution_time_grasp[row_number-1]
+
         if col_number % 2 == 0:
             cell.set_facecolor(ga_color)
+
+            if row_number == 0:
+                pass
+            elif (ga_value < grasp_value and col_number == 4) or (ga_value > grasp_value and col_number != 4):
+                cell.set_text_props(fontweight='bold', color='green')
+            else:
+                cell.set_text_props(fontweight='bold', color='red')
+
         elif col_number % 2 != 0 and col_number != -1:
             cell.set_facecolor(grasp_color)
-        cell.set_alpha(0.4)
+
+            if row_number == 0:
+                pass
+            elif (grasp_value < ga_value and col_number == 5) or (grasp_value > ga_value and col_number != 5):
+                cell.set_text_props(fontweight='bold', color='green')
+            else:
+                cell.set_text_props(fontweight='bold', color='red')
+
+        cell.set_alpha(0.2)
 
     legend_elements = [
         Patch(facecolor=ga_color, label='GA'),
@@ -134,7 +162,7 @@ def generate_datatable(vet_file_names, vet_value_ga, vet_weight_ga, vet_executio
 
     plt.title("Data presented as an average", fontsize=16)
 
-    plt.savefig('data_table.png', bbox_inches='tight', pad_inches=0.1, transparent=True)
+    plt.savefig('dt_general.png', bbox_inches='tight', pad_inches=0.1, transparent=True)
     plt.show()
 
 def generate_graphs(results_ga, results_grasp):
