@@ -171,7 +171,7 @@ def main():
   generation_qtd = 10000
   mutation_rate = 0.5
   security_rate = 1    # 0 - 100%
-  for file_number in range(1,10):
+  for file_number in range(10,17):
     header_line = f"Iteracao;Valor;Peso;Capacidade restante;Execucao(s)\n"
     with open(f"output/ga/ga_{file_number}.out", "w") as output_file:
       output_file.write(header_line)
