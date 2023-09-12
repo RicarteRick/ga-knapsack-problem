@@ -47,7 +47,7 @@ def get_all_values_metrics(vet_value, vet_weight, vet_execution_time, vet_remain
 
     return value_metrics, weight_metrics, execution_time_metrics, remaining_capacity_metrics
 
-def generate_value_x_execution_time_graph(vet_file_names, vet_value_ga, vet_value_grasp, vet_execution_time_ga, vet_execution_time_grasp):
+def generate_value_x_execution_time_graph(vet_file_names, vet_value_ga, vet_value_std_ga, vet_value_grasp, vet_value_std_grasp, vet_execution_time_ga, vet_execution_time_grasp):
     fig, ax1 = plt.subplots(figsize=(10, 6))
 
     ga_bar_color = 'blue'
@@ -62,8 +62,8 @@ def generate_value_x_execution_time_graph(vet_file_names, vet_value_ga, vet_valu
     x2 = x + width/2
 
     # bar graph for values
-    ax1.bar(x1, vet_value_ga, width=width, label='Value mean - GA', alpha=0.7, color=ga_bar_color)
-    ax1.bar(x2, vet_value_grasp, width=width, label='Value mean - GRASP', alpha=0.7, color=grasp_bar_color)
+    ax1.bar(x1, vet_value_ga, width=width, label='Value mean - GA', alpha=0.7, color=ga_bar_color, yerr=vet_value_std_ga, capsize=5)
+    ax1.bar(x2, vet_value_grasp, width=width, label='Value mean - GRASP', alpha=0.7, color=grasp_bar_color, yerr=vet_value_std_grasp, capsize=5)
 
     ax1.set_xlabel('Files')
     ax1.set_ylabel('Value mean')
@@ -87,16 +87,18 @@ def generate_graphs(results_ga, results_grasp):
     vet_file_names = [result['File'] for result in results_ga]
 
     vet_value_ga = [result['Value mean'] for result in results_ga]
+    vet_value_std_ga = [result['Value std'] for result in results_ga]
     vet_weight_ga = [result['Weight mean'] for result in results_ga]
     vet_execution_time_ga = [result['Execution time(s) mean'] for result in results_ga]
     vet_remaining_capacity_ga = [result['Remaining capacity mean'] for result in results_ga]
 
     vet_value_grasp = [result['Value mean'] for result in results_grasp]
+    vet_value_std_grasp = [result['Value std'] for result in results_grasp]
     vet_weight_grasp = [result['Weight mean'] for result in results_grasp]
     vet_execution_time_grasp = [result['Execution time(s) mean'] for result in results_grasp]
     vet_remaining_capacity_grasp = [result['Remaining capacity mean'] for result in results_grasp]
 
-    generate_value_x_execution_time_graph(vet_file_names, vet_value_ga, vet_value_grasp, vet_execution_time_ga, vet_execution_time_grasp)
+    generate_value_x_execution_time_graph(vet_file_names, vet_value_ga, vet_value_std_ga, vet_value_grasp, vet_value_std_grasp, vet_execution_time_ga, vet_execution_time_grasp)
 
 def main():
     results_ga = []
