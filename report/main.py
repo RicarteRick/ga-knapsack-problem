@@ -86,9 +86,51 @@ def generate_value_x_execution_time_graph(vet_file_names, vet_value_ga, vet_valu
     lines, labels = ax1.get_legend_handles_labels()
     lines2, labels2 = ax2.get_legend_handles_labels()
     ax1.legend(lines + lines2, labels + labels2, loc='upper left')
+    
+    plt.title("Value mean x Execution time(s) mean", fontsize=16)
 
     plt.tight_layout()
     plt.savefig('graph_value_x_time.png', bbox_inches='tight', pad_inches=0.1, transparent=True)
+    plt.show()
+
+def generate_weight_value_graph(vet_file_names, vet_weight_ga, vet_weight_std_ga, vet_weight_grasp, vet_weight_std_grasp, 
+                                          vet_value_ga, vet_value_grasp):
+    fig, ax1 = plt.subplots(figsize=(10, 6))
+
+    ga_bar_color = 'blue'
+    grasp_bar_color = 'orange'
+    ga_line_color = 'red'
+    grasp_line_color = 'green'
+
+    # splitting the bars
+    width = 0.35
+    x = np.arange(len(vet_file_names))
+    x1 = x - width/2
+    x2 = x + width/2
+
+    # bar graph for weights
+    ax1.bar(x1, vet_weight_ga, width=width, label='Weight mean - GA', alpha=0.7, color=ga_bar_color, yerr=vet_weight_std_ga, capsize=5)
+    ax1.bar(x2, vet_weight_grasp, width=width, label='Weight mean - GRASP', alpha=0.7, color=grasp_bar_color, yerr=vet_weight_std_grasp, capsize=5)
+
+    ax1.set_xlabel('Files')
+    ax1.set_ylabel('Weight mean')
+    ax1.set_xticks(x)
+    ax1.set_xticklabels(vet_file_names, rotation=90)
+
+    ax2 = ax1.twinx()
+    ax2.plot(x1, vet_value_ga, label='Value mean - GA', marker='o', linestyle='--', color=f'tab:{ga_line_color}')
+    ax2.plot(x2, vet_value_grasp, label='Value mean - GRASP', marker='o', linestyle='--', color=f'tab:{grasp_line_color}')
+    ax2.set_ylabel('Value mean')
+
+    # legends
+    lines, labels = ax1.get_legend_handles_labels()
+    lines2, labels2 = ax2.get_legend_handles_labels()
+    ax1.legend(lines + lines2, labels + labels2, loc='upper left')
+    
+    plt.title("Weight mean x Value mean", fontsize=16)
+
+    plt.tight_layout()
+    plt.savefig('graph_weight_x_value.png', bbox_inches='tight', pad_inches=0.1, transparent=True)
     plt.show()
 
 def generate_datatable(vet_file_names, vet_value_ga, vet_weight_ga, vet_execution_time_ga,
@@ -160,7 +202,7 @@ def generate_datatable(vet_file_names, vet_value_ga, vet_weight_ga, vet_executio
     table_data.set_fontsize(12)
     table_data.scale(1.2, 1.2)
 
-    plt.title("Data presented as an average", fontsize=16)
+    plt.title("General data presented as an average", fontsize=16)
 
     plt.savefig('dt_general.png', bbox_inches='tight', pad_inches=0.1, transparent=True)
     plt.show()
@@ -171,16 +213,20 @@ def generate_graphs(results_ga, results_grasp):
     vet_value_ga = [result['Value mean'] for result in results_ga]
     vet_value_std_ga = [result['Value std'] for result in results_ga]
     vet_weight_ga = [result['Weight mean'] for result in results_ga]
+    vet_weight_std_ga = [result['Weight std'] for result in results_ga]
     vet_execution_time_ga = [result['Execution time(s) mean'] for result in results_ga]
     vet_remaining_capacity_ga = [result['Remaining capacity mean'] for result in results_ga]
 
     vet_value_grasp = [result['Value mean'] for result in results_grasp]
     vet_value_std_grasp = [result['Value std'] for result in results_grasp]
     vet_weight_grasp = [result['Weight mean'] for result in results_grasp]
+    vet_weight_std_grasp = [result['Weight std'] for result in results_grasp]
     vet_execution_time_grasp = [result['Execution time(s) mean'] for result in results_grasp]
     vet_remaining_capacity_grasp = [result['Remaining capacity mean'] for result in results_grasp]
 
     generate_value_x_execution_time_graph(vet_file_names, vet_value_ga, vet_value_std_ga, vet_value_grasp, vet_value_std_grasp, vet_execution_time_ga, vet_execution_time_grasp)
+    
+    generate_weight_value_graph(vet_file_names, vet_weight_ga, vet_weight_std_ga, vet_weight_grasp, vet_weight_std_grasp, vet_value_ga, vet_value_grasp)
     
     generate_datatable(vet_file_names, vet_value_ga, vet_weight_ga, vet_execution_time_ga,
                        vet_value_grasp, vet_weight_grasp, vet_execution_time_grasp)
