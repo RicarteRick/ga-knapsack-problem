@@ -133,6 +133,33 @@ def generate_weight_value_graph(vet_file_names, vet_weight_ga, vet_weight_std_ga
     plt.savefig('graph_weight_x_value.png', bbox_inches='tight', pad_inches=0.1, transparent=True)
     plt.show()
 
+def generate_value_by_weight_pie_graph(vet_weight_ga, vet_weight_grasp, vet_value_ga, vet_value_grasp):
+    
+    vet_cost_benefit_ga = []
+    vet_cost_benefit_grasp = []
+
+    for ind, val in enumerate(vet_value_ga):
+        ga_cost_benefit = val/vet_weight_ga[ind] if vet_weight_ga[ind] > 0 else 0
+        grasp_cost_benefit = vet_value_grasp[ind]/vet_weight_grasp[ind] if vet_weight_grasp[ind] > 0 else 0
+
+        if ga_cost_benefit > grasp_cost_benefit:
+            vet_cost_benefit_ga.append(val/vet_weight_ga[ind] if vet_weight_ga[ind] > 0 else 0)
+        else:
+            vet_cost_benefit_grasp.append(vet_value_grasp[ind]/vet_weight_grasp[ind] if vet_weight_grasp[ind] > 0 else 0)
+    
+    labels = ['GA', 'GRASP']
+    ratios = [len(vet_cost_benefit_ga), len(vet_cost_benefit_grasp)]
+    colors = ['blue', 'orange']
+    explode = (0.05, 0)
+
+    plt.pie(ratios, labels=labels, colors=colors, wedgeprops={"alpha": 0.5}, autopct='%1.1f%%', explode=explode, startangle=90)
+    plt.axis('equal')
+
+    plt.title('Cost-benefit Value/Weight per file')
+
+    plt.savefig('graph_pie_value_by_weight.png', bbox_inches='tight', pad_inches=0.1, transparent=True)
+    plt.show()
+
 def generate_datatable(vet_file_names, vet_value_ga, vet_weight_ga, vet_execution_time_ga,
                        vet_value_grasp, vet_weight_grasp, vet_execution_time_grasp):
     
@@ -224,12 +251,14 @@ def generate_graphs(results_ga, results_grasp):
     vet_execution_time_grasp = [result['Execution time(s) mean'] for result in results_grasp]
     vet_remaining_capacity_grasp = [result['Remaining capacity mean'] for result in results_grasp]
 
+    generate_datatable(vet_file_names, vet_value_ga, vet_weight_ga, vet_execution_time_ga,
+                       vet_value_grasp, vet_weight_grasp, vet_execution_time_grasp)
+    
     generate_value_x_execution_time_graph(vet_file_names, vet_value_ga, vet_value_std_ga, vet_value_grasp, vet_value_std_grasp, vet_execution_time_ga, vet_execution_time_grasp)
     
     generate_weight_value_graph(vet_file_names, vet_weight_ga, vet_weight_std_ga, vet_weight_grasp, vet_weight_std_grasp, vet_value_ga, vet_value_grasp)
     
-    generate_datatable(vet_file_names, vet_value_ga, vet_weight_ga, vet_execution_time_ga,
-                       vet_value_grasp, vet_weight_grasp, vet_execution_time_grasp)
+    generate_value_by_weight_pie_graph(vet_weight_ga, vet_weight_grasp, vet_value_ga, vet_value_grasp)
 
 def main():
     results_ga = []
